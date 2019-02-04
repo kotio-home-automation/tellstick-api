@@ -73,6 +73,60 @@ http://0.0.0.0:5001/tellstick/switches
 ]
 ```
 
+### Turn on switches
+
+* Method: POST
+* Content-Type: application/json
+* URL: http://0.0.0.0:5001/tellstick/on
+
+## Request body example
+
+[115,116]
+
+## Response example
+
+```
+[
+  {
+    "name": "Makuuhuone",
+    "switchedOn": true,
+    "id": 115
+  },
+  {
+    "name": "OH TV",
+    "switchedOn": true,
+    "id": 116
+  }
+]
+```
+
+### Turn on switches
+
+* Method: POST
+* Content-Type: application/json
+* URL: http://0.0.0.0:5001/tellstick/off
+
+## Request body example
+
+[115,116]
+
+## Response example
+
+```
+[
+  {
+    "name": "Makuuhuone",
+    "switchedOn": false,
+    "id": 115
+  },
+  {
+    "name": "OH TV",
+    "switchedOn": false,
+    "id": 116
+  }
+]
+```
+
 ## Tests
 
 TODO
