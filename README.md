@@ -21,7 +21,18 @@ TODO
 
 ### Example configuration
 
-TODO
+```Javascript
+[
+    {
+        "id": 135,
+        "name": "Parveke"
+    },
+    {
+        "id": 136,
+        "name": "Olohuone"
+    }
+]
+```
 
 ## Run application
 
@@ -36,7 +47,7 @@ http://0.0.0.0:5001/tellstick/sensors
 
 #### Response example
 
-```
+```Javascript
 [
   {
     "id": 136,
@@ -58,7 +69,7 @@ http://0.0.0.0:5001/tellstick/switches
 
 ## Response example
 
-```
+```Javascript
 [
   {
     "name": "Makuuhuone",
@@ -85,7 +96,7 @@ http://0.0.0.0:5001/tellstick/switches
 
 ## Response example
 
-```
+```Javascript
 [
   {
     "name": "Makuuhuone",
@@ -100,7 +111,7 @@ http://0.0.0.0:5001/tellstick/switches
 ]
 ```
 
-### Turn on switches
+### Turn off switches
 
 * Method: POST
 * Content-Type: application/json
@@ -112,7 +123,7 @@ http://0.0.0.0:5001/tellstick/switches
 
 ## Response example
 
-```
+```Javascript
 [
   {
     "name": "Makuuhuone",
