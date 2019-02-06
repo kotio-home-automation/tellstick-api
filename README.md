@@ -17,7 +17,10 @@ The `tellcore-py` module has it's own requirements that need to be attended, see
 
 ## Configuring application
 
-TODO
+The application needs to be configured so that it knows what sensors it reads data from.
+A example configuration file is provided and can be found at `sensors.json`, it contains a example and test configuration. The configuration consists of a id and a descriptive name, the name can be chosen freely and be what ever seems appropriate e.g. a room name.
+
+See [my blog post](http://blog.polarcoder.net/2016/02/diy-home-automation-v2.html) for details on how to find out what the correct id's are for your sensors if you have any.
 
 ### Example configuration
 
@@ -36,8 +39,12 @@ TODO
 
 ## Run application
 
-Once prequisites are met and dependencies installed the application can run as `python http_api.py`. If you have
+Once prequisites are met and dependencies installed the application can run as `python http_api.py sensors.json`. If you have
 python 2 and 3 installed the command `python` probably needs to be replaced with command `python3`.
+
+### Run application with pm2
+
+`pm2 start --interpreter=/usr/bin/python3 --name=tellstick-py-api http_api.py -- sensors.json`
 
 ## Endpoints
 
@@ -140,4 +147,4 @@ http://0.0.0.0:5001/tellstick/switches
 
 ## Tests
 
-TODO
+No tests at this time as I'm still trying to figure out how to unit test this properly.

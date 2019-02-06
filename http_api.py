@@ -10,12 +10,14 @@ Endpoints:
 Requires:
     bottle
     tellcore-py
+
+Start with command: python3 http_api.py sensors.json
 '''
 from bottle import get, post, response, request, run
-import json
+import json, sys
 import tellcore.telldus as td
 from device.device import list_devices, turn_off, turn_on
-from sensor.sensor import list_sensors, load_sensor_configuration
+from sensor.sensor import TellstickSensor
 
 core = td.TelldusCore()
 
@@ -34,20 +36,31 @@ def enable_cors(func):
 
     return wrapper
 
-@get('/tellstick/switches')
+if __name__ == '__main__':
+    if (len(sys.argv) > 2):
+        print('Too many arguments!')
+        sys.exit(0)
+
+    # First argument is this python file itself
+    if (len(sys.argv) == 2):
+        configurationFile = sys.argv[1]
+        global tellstickSensor
+        tellstickSensor = TellstickSensor(configurationFile)
+
+@get('/tellstick/devices')
 @enable_cors
 def list_device_data():
     response.content_type = 'application/json; charset=UTF-8'
     return list_devices(core.devices())
 
-@post('/tellstick/on')
+@post('/tellstick/devices/on')
 def turn_on_devices():
     response.content_type = 'application/json; charset=UTF-8'
     deviceIds = request.json
     turn_on(deviceIds, core.devices())
     return list_devices(core.devices())
 
-@post('/tellstick/off')
+@post('/tellstick/devices/off')
 def turn_off_devices():
     response.content_type = 'application/json; charset=UTF-8'
     deviceIds = request.json
@@ -58,8 +71,7 @@ def turn_off_devices():
 @enable_cors
 def list_sensor_data():
     response.content_type = 'application/json; charset=UTF-8'
-    sensorConfiguration = load_sensor_configuration('sensors.json')
-    return list_sensors(core.sensors(), sensorConfiguration)
+    return tellstickSensor.list_sensors(core.sensors())
 
 if __name__ == '__main__':
     try:

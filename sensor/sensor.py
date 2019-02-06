@@ -1,47 +1,52 @@
 import json
 import tellcore.constants as const
 
-def __findCurrentSensorName(sensorId, sensorConfiguration):
-    matchingSensorsConfiguration = filter(lambda knownSensor: knownSensor['id'] == sensorId, sensorConfiguration)
-    currentSensorConfiguration = next(matchingSensorsConfiguration)
-    return currentSensorConfiguration['name']
+class TellstickSensor():
 
-def __parseSensorData(sensor):
-    humidity = sensor.value(const.TELLSTICK_HUMIDITY) if sensor.has_value(const.TELLSTICK_HUMIDITY) else None
-    temperature = sensor.value(const.TELLSTICK_TEMPERATURE)
-    
-    if humidity is None:
-        return {'id': sensor.id, 'temperature': float(temperature.value)}
-    else:
-        return {'id': sensor.id, 'temperature': float(temperature.value), 'humidity': float(humidity.value)}
+    def __init__(self, sensorConfigurationFile):
+        self.sensorConfiguration = self.__load_sensor_configuration__(sensorConfigurationFile)
 
-def __appendNameToSensors(sensors, sensorConfiguration):
-    namedSensors = []
-    for sensor in sensors:
-        filteredSensorConfigurations = filter(lambda c: c['id'] == sensor['id'], sensorConfiguration)
-        configuration = next(filteredSensorConfigurations)
-        sensor['name'] = configuration['name']
-        namedSensors.append(sensor)
+    def __load_sensor_configuration__(self, fileName):
+        with open(fileName) as sensorConfigurationFile:
+            configuredSensors = json.load(sensorConfigurationFile)
+        sensorConfigurationFile.close()
+        return configuredSensors
 
-    return namedSensors
+    def __findCurrentSensorName__(self, sensorId):
+        matchingSensorsConfiguration = filter(lambda knownSensor: knownSensor['id'] == sensorId, self.sensorConfiguration)
+        currentSensorConfiguration = next(matchingSensorsConfiguration)
+        return currentSensorConfiguration['name']
 
-def __parseSensorsData(sensors, sensorConfiguration):
-    parsedSensors = map(__parseSensorData, sensors)
-    namedSensors = __appendNameToSensors(parsedSensors, sensorConfiguration)
-    return namedSensors
+    def __appendNameToSensors__(self, sensors):
+        namedSensors = []
+        for sensor in sensors:
+            filteredSensorConfigurations = filter(lambda c: c['id'] == sensor['id'], self.sensorConfiguration)
+            configuration = next(filteredSensorConfigurations)
+            sensor['name'] = configuration['name']
+            namedSensors.append(sensor)
 
-def __filter_known_sensors(sensors, sensorConfiguration):
-    knownSensorIds = map(lambda knownSensor: knownSensor['id'], sensorConfiguration)
-    knownSensors = filter(lambda sensor: sensor.id in knownSensorIds, sensors)
-    return knownSensors
+        return namedSensors
 
-def list_sensors(sensors, sensorConfiguration):
-    knownSensors = __filter_known_sensors(sensors, sensorConfiguration)
-    parsedSensorData = __parseSensorsData(knownSensors, sensorConfiguration)
-    return json.dumps(parsedSensorData, ensure_ascii=False).encode('utf8')
+    def __parseSensorData__(self, sensor):
+        humidity = sensor.value(const.TELLSTICK_HUMIDITY) if sensor.has_value(const.TELLSTICK_HUMIDITY) else None
+        temperature = sensor.value(const.TELLSTICK_TEMPERATURE)
 
-def load_sensor_configuration(fileName):
-    with open(fileName) as sensorConfigurationFile:
-        configuredSensors = json.load(sensorConfigurationFile)
-    sensorConfigurationFile.close()
-    return configuredSensors
+        if humidity is None:
+            return {'id': sensor.id, 'temperature': float(temperature.value)}
+        else:
+            return {'id': sensor.id, 'temperature': float(temperature.value), 'humidity': float(humidity.value)}
+
+    def __parseSensorsData__(self, sensors):
+        parsedSensors = map(self.__parseSensorData__, sensors)
+        namedSensors = self.__appendNameToSensors__(parsedSensors)
+        return namedSensors
+
+    def __filter_known_sensors__(self, sensors):
+        knownSensorIds = map(lambda knownSensor: knownSensor['id'], self.sensorConfiguration)
+        knownSensors = filter(lambda sensor: sensor.id in knownSensorIds, sensors)
+        return knownSensors
+
+    def list_sensors(self, sensors):
+        knownSensors = self.__filter_known_sensors__(sensors)
+        parsedSensorData = self.__parseSensorsData__(knownSensors)
+        return json.dumps(parsedSensorData, ensure_ascii=False).encode('utf8')
