@@ -2,10 +2,10 @@
 HTTP API for providing tellstick switch status
 
 Endpoints:
-    list switches: http://0.0.0.0:5001/tellstick/switches
+    list switches: http://0.0.0.0:5001/tellstick/devices
     list known sensors: http://0.0.0.0:5001/tellstick/sensors
-    turn on switches: http://0.0.0.0:5001/tellstick/on
-    turn off switches: http://0.0.0.0:5001/tellstick/off
+    turn on switches: http://0.0.0.0:5001/tellstick/devices/on
+    turn off switches: http://0.0.0.0:5001/tellstick/devices/off
 
 Requires:
     bottle
