@@ -13,7 +13,7 @@ Requires:
 
 Start with command: python3 http_api.py sensors.json
 '''
-from bottle import get, post, response, request, run
+from bottle import route, response, request, run
 import json, sys
 import tellcore.telldus as td
 from device.device import list_devices, turn_off, turn_on
@@ -25,15 +25,15 @@ core = td.TelldusCore()
 def enable_cors(func):
     def wrapper(*args, **kwargs):
         response.set_header("Access-Control-Allow-Origin", "*")
-        response.set_header("Access-Control-Allow-Methods", "GET, OPTIONS")
-        response.set_header("Access-Control-Allow-Headers", "Origin, Content-Type")
+        response.set_header("Content-Type", "application/json")
+        response.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        response.set_header("Access-Control-Allow-Headers", "Access-Control-Allow-Origin, Content-Type")
 
         # skip the function if it is not needed
         if request.method == 'OPTIONS':
             return
 
         return func(*args, **kwargs)
-
     return wrapper
 
 if __name__ == '__main__':
@@ -47,27 +47,29 @@ if __name__ == '__main__':
         global tellstickSensor
         tellstickSensor = TellstickSensor(configurationFile)
 
-@get('/tellstick/devices')
+@route('/tellstick/devices', method = ['GET'])
 @enable_cors
 def list_device_data():
     response.content_type = 'application/json; charset=UTF-8'
     return list_devices(core.devices())
 
-@post('/tellstick/devices/on')
+@route('/tellstick/devices/on', method = ['OPTIONS', 'POST'])
+@enable_cors
 def turn_on_devices():
     response.content_type = 'application/json; charset=UTF-8'
     deviceIds = request.json
     turn_on(deviceIds, core.devices())
     return list_devices(core.devices())
 
-@post('/tellstick/devices/off')
+@route('/tellstick/devices/off', method = ['OPTIONS', 'POST'])
+@enable_cors
 def turn_off_devices():
     response.content_type = 'application/json; charset=UTF-8'
     deviceIds = request.json
     turn_off(deviceIds, core.devices())
     return list_devices(core.devices())
 
-@get('/tellstick/sensors')
+@route('/tellstick/sensors', method = ['GET'])
 @enable_cors
 def list_sensor_data():
     response.content_type = 'application/json; charset=UTF-8'
