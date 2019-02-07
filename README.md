@@ -72,30 +72,33 @@ http://0.0.0.0:5001/tellstick/sensors
 
 ### List switches
 
-http://0.0.0.0:5001/tellstick/switches
+http://0.0.0.0:5001/tellstick/devices
 
 ## Response example
 
 ```Javascript
-[
-  {
-    "name": "Makuuhuone",
-    "switchedOn": false,
-    "id": 115
-  },
-  {
-    "name": "OH TV",
-    "switchedOn": true,
-    "id": 116
-  }
-]
+{
+    devices: [
+    {
+        "name": "Makuuhuone",
+        "switchedOn": false,
+        "id": 115
+    },
+    {
+        "name": "OH TV",
+        "switchedOn": true,
+        "id": 116
+    }
+    ],
+    groups: []
+}
 ```
 
 ### Turn on switches
 
 * Method: POST
 * Content-Type: application/json
-* URL: http://0.0.0.0:5001/tellstick/on
+* URL: http://0.0.0.0:5001/tellstick/devices/on
 
 ## Request body example
 
@@ -104,25 +107,28 @@ http://0.0.0.0:5001/tellstick/switches
 ## Response example
 
 ```Javascript
-[
-  {
-    "name": "Makuuhuone",
-    "switchedOn": true,
-    "id": 115
-  },
-  {
-    "name": "OH TV",
-    "switchedOn": true,
-    "id": 116
-  }
-]
+{
+    devices: [
+    {
+        "name": "Makuuhuone",
+        "switchedOn": true,
+        "id": 115
+    },
+    {
+        "name": "OH TV",
+        "switchedOn": true,
+        "id": 116
+    }
+    ],
+    groups: []
+}
 ```
 
 ### Turn off switches
 
 * Method: POST
 * Content-Type: application/json
-* URL: http://0.0.0.0:5001/tellstick/off
+* URL: http://0.0.0.0:5001/tellstick/devices/off
 
 ## Request body example
 
@@ -131,18 +137,21 @@ http://0.0.0.0:5001/tellstick/switches
 ## Response example
 
 ```Javascript
-[
-  {
-    "name": "Makuuhuone",
-    "switchedOn": false,
-    "id": 115
-  },
-  {
-    "name": "OH TV",
-    "switchedOn": false,
-    "id": 116
-  }
-]
+{
+    devices: [
+    {
+        "name": "Makuuhuone",
+        "switchedOn": false,
+        "id": 115
+    },
+    {
+        "name": "OH TV",
+        "switchedOn": false,
+        "id": 116
+    }
+    ],
+    groups: []
+}
 ```
 
 ## Tests
