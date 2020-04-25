@@ -1,4 +1,4 @@
-'''
+"""
 HTTP API for providing tellstick switch status
 
 Endpoints:
@@ -12,14 +12,17 @@ Requires:
     tellcore-py
 
 Start with command: python3 http_api.py sensors.json
-'''
-from bottle import route, response, request, run
-import json, sys
+"""
+import sys
+
 import tellcore.telldus as td
+from bottle import route, response, request, run
+
 from device.device import list_devices, turn_off, turn_on
 from sensor.sensor import TellstickSensor
 
 core = td.TelldusCore()
+
 
 # borrowed from https://ongspxm.github.io/blog/2017/02/bottlepy-cors/
 def enable_cors(func):
@@ -36,16 +39,18 @@ def enable_cors(func):
         return func(*args, **kwargs)
     return wrapper
 
+
 if __name__ == '__main__':
-    if (len(sys.argv) > 2):
+    if len(sys.argv) > 2:
         print('Too many arguments!')
         sys.exit(0)
 
     # First argument is this python file itself
-    if (len(sys.argv) == 2):
+    if len(sys.argv) == 2:
         configurationFile = sys.argv[1]
         global tellstickSensor
         tellstickSensor = TellstickSensor(configurationFile)
+
 
 @route('/tellstick/devices', method = ['GET'])
 @enable_cors
@@ -53,21 +58,24 @@ def list_device_data():
     response.content_type = 'application/json; charset=UTF-8'
     return list_devices(core.devices())
 
+
 @route('/tellstick/devices/on', method = ['OPTIONS', 'POST'])
 @enable_cors
 def turn_on_devices():
     response.content_type = 'application/json; charset=UTF-8'
-    deviceIds = request.json
-    turn_on(deviceIds, core.devices())
+    device_ids = request.json
+    turn_on(device_ids, core.devices())
     return list_devices(core.devices())
+
 
 @route('/tellstick/devices/off', method = ['OPTIONS', 'POST'])
 @enable_cors
 def turn_off_devices():
     response.content_type = 'application/json; charset=UTF-8'
-    deviceIds = request.json
-    turn_off(deviceIds, core.devices())
+    device_ids = request.json
+    turn_off(device_ids, core.devices())
     return list_devices(core.devices())
+
 
 @route('/tellstick/sensors', method = ['GET'])
 @enable_cors
@@ -75,8 +83,9 @@ def list_sensor_data():
     response.content_type = 'application/json; charset=UTF-8'
     return tellstickSensor.list_sensors(core.sensors())
 
+
 if __name__ == '__main__':
     try:
         run(host='0.0.0.0', port=5001, debug=True)
-    except:
-        pass
+    finally:
+        print('Exiting...')
